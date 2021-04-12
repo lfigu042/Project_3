@@ -1,7 +1,8 @@
 package com.company;
 
 import java.util.Arrays;
-/** * Implements a Graph. Uses an adjacency matrix to represent the graph.
+/**
+ * * Implements a Graph. Uses an adjacency matrix to represent the graph.
  *
  *  @author Prof. Antonio Hernandez
  *  */
@@ -43,7 +44,7 @@ public class Graph implements GraphInterface{
         }
         return Arrays.copyOf(vert, total);
 }
-public String toString()    {
+    public String toString()    {
         String s = "";
         for (int i=0; i<verticesNumber; i++)        {
             for (int j=0; j<verticesNumber; j++)            {

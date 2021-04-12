@@ -30,10 +30,9 @@ public class GraphDisplay extends JPanel {
         int height = 50;
         int labelX = 15;
         int labelY = 30;
+        g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
 
-        g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 24));
-
-        for (int i =0; i < v; i++){
+        for (int i = 0; i < v; i++){
             x = m[i][0];
             y = m[i][1];
             g.setColor(Color.ORANGE);
