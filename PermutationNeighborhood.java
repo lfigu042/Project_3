@@ -60,7 +60,6 @@ public class PermutationNeighborhood{
 
             return a;
         }
-        else
-            return null;
+        else return null;
     }
 }
