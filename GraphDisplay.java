@@ -8,63 +8,46 @@ public class GraphDisplay extends JPanel {
     readInput myText = new readInput();
     private int[][] coordinates;
     int vertices;
-
+    int printonceonlyomg =0;
     public void paint(Graphics g) {
         coordinates = myText.getMatrix(); //coordinates
-        vertices = setV(coordinates); //vertices
+        vertices = myText.getVertices(); //vertices
 
-//       int leftX = 100;
-//       int topY = 100;
-//       int width = 50;
-//       int height = 50;
-//       int labelX = 17;
-//       int labelY = 31;
-//       int gridWidth = 150;
+        while(printonceonlyomg == 0){
+            printMatrix(coordinates);
+            printonceonlyomg++;
+        }
+
        drawVertices(coordinates, vertices, g);
-//       draw vertex 1
-//       g.setColor(Color.ORANGE);
-//       g.fillOval(leftX, topY, width, height);
-//       g.setColor(Color.BLACK);
-//       g.drawOval(leftX, topY, width, height);
-//       g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 24));
-//       g.drawString("1", leftX+labelX, topY+labelY);
 
 //      draw edge (1,2)
 //        g.setColor(Color.BLACK);
-//        g.drawLine(leftX+width, topY+height/2, leftX+gridWidth, topY+height/2);
+//        g.drawLine(x1, y1+height/2, x2, y2+height/2);
     }
     public void drawVertices(int[][] m, int v, Graphics g){
         int x,y;
-        int leftX = 100;
-        int topY = 100;
         int width = 50;
         int height = 50;
-        int labelX = 17;
-        int labelY = 31;
-        int gridWidth = 150;
+        int labelX = 15;
+        int labelY = 30;
 
-        g.setColor(Color.ORANGE);
-        g.fillOval(leftX+gridWidth, topY, width, height);
-        g.setColor(Color.BLACK);
-        g.drawOval(leftX+gridWidth, topY, width, height);
         g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 24));
 
         for (int i =0; i < v; i++){
             x = m[i][0];
             y = m[i][1];
+            g.setColor(Color.ORANGE);
+            g.fillOval(x, y - labelY, width, height);
+            g.setColor(Color.BLACK);
+            g.drawOval(x, y - labelY, width, height);
             g.drawString(String.valueOf(i), x+labelX, y);
         }
     }
-    public int setV(int[][] m){ //can also print matrix
-        int v = 0;
+    public void printMatrix(int[][] m){ //print a matrix
         for (int[] x : m) {
-            for (int y : x){
+            for (int y : x)
                 System.out.print(y + " ");
-            }
             System.out.println();
-            v++;
         }
-        System.out.println("vertices: " + v);
-        return v; //vertices
     }
 }
