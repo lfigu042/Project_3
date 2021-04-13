@@ -16,6 +16,7 @@ public class Main {
         FrameDisplay frame = new FrameDisplay();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+        createAdjacencyMatrix();
         // generate 10 random permutations of values in [0,5]
         // for (int i = 0; i < 10; i++) {
         // int[] a = new int[6];
@@ -222,6 +223,30 @@ public class Main {
      * method to create an adjacency matrix
      */
     public static void createAdjacencyMatrix() {
+        readInput input = new readInput();
+        int[][] points = input.getMatrix();
+        double[][] adjacencyMatrix = new double[points.length][points.length];
+        for (int i = 0; i < adjacencyMatrix.length; i++) {
+            for (int j = 0; j < adjacencyMatrix[i].length; j++) {
+                if (i == j)
+                    adjacencyMatrix[i][j] = 0.0; // distance from a point to itself is always 0
+                else if (adjacencyMatrix[j][i] != 0.0) { // if the point's distance has been previously calculated
+                    adjacencyMatrix[i][j] = adjacencyMatrix[j][i]; // don't recalculate it, just use the value you
+                                                                   // already have.
+                }
+                // the points are not equal to themselves and have not been calculated
+                else {
+                    adjacencyMatrix[i][j] = calculatePointDistance(points[i][0], points[i][1], points[j][0],
+                            points[j][1]);
+                }
+            }
+        }
+        for (int i = 0; i < adjacencyMatrix.length; i++) {
+            for (int j = 0; j < adjacencyMatrix[i].length; j++) {
+                System.out.print(adjacencyMatrix[i][j] + " ");
+            }
+            System.out.println("\n");
+        }
 
     }
 
