@@ -10,7 +10,8 @@ public class GraphDisplay extends JPanel {
     private int[][] coordinates = inputGraph.getCoordinateMatrix(); //coordinates
     private int vertices = inputGraph.getVerticesNumber(); //vertices
     private int[][] edges = inputGraph.getEdgeMatrix(); //edges matrix with weight
-
+    private int[] shortestPath = inputGraph.getShortestPath(); //shortest hamiltonian cycle
+    
     public void paint(Graphics g) {
         System.out.println("paint() ran");
         drawVertices(coordinates, vertices, g);
