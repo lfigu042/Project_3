@@ -8,24 +8,61 @@ import java.util.Arrays;
  *  */
 
 public class Graph implements GraphInterface{
-    private int verticesNumber;
-    private int[][] matrix;
-    //adjacency matrix
-    public Graph()    {
-        verticesNumber = 5;
-        matrix = new int[verticesNumber][verticesNumber];
+
+    readInput myText = new readInput();
+    private int verticesNumber = myText.getVertices(); //vertices
+    private int[][] coordinateMatrix = myText.getMatrix(); //coordinates
+    private int[][] edgeMatrix = new int[verticesNumber][verticesNumber]; //adjacency matrix
+
+//  GETTERS
+    public int[][]getCoordinateMatrix(){   return this.coordinateMatrix;   }
+    public int[][] getEdgeMatrix()     {   setEdgeMatrix();   return this.edgeMatrix;    }
+    public int getVerticesNumber()     {   return this.verticesNumber;     }
+
+    public void addEdge(int i, int j, int d)    {
+        edgeMatrix[i][j] = d;
+        edgeMatrix[j][i] = d;
     }
-    public Graph(int n)    {
-        verticesNumber = n;
-        matrix = new int[verticesNumber][verticesNumber];
+    public void removeEdge(int i, int j)    {
+        edgeMatrix[i][j] = 0;
+        edgeMatrix[j][i] = 0;
     }
-    public void addEdge(int v, int w)    {
-        matrix[v][w] = 1;
-        matrix[w][v] = 1;
+    /**
+     * Calculates the distance b/w 2 points
+     *
+     * @param x1 x coordinate of first point
+     * @param y1 y coordnate of first point
+     * @param x2 x coordinate of second point
+     * @param y2 y coordinate of second point
+     * @return the distance between the two points as calculated with pythagorean
+     *         theorem.
+     */
+    public static double calculatePointDistance(int x1, int y1, int x2, int y2) {
+        return Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow(y2 - y1, 2));
     }
-    public void removeEdge(int v, int w)    {
-        matrix[v][w] = 0;
-        matrix[w][v] = 0;
+    /**
+     * method to create an adjacency matrix
+     */
+    public void setEdgeMatrix() {
+        int d;
+        for (int i = 0; i < verticesNumber; i++) {
+            for (int j = 0; j < verticesNumber; j++) {
+                if (i == j) addEdge( i,  j, 0); // distance from a point to itself is always 0
+                else { // the points are not equal to themselves and have not been calculated
+                    d = (int)calculatePointDistance(coordinateMatrix[i][0], coordinateMatrix[i][1], coordinateMatrix[j][0], coordinateMatrix[j][1]);
+                    addEdge( i,  j, d);
+                }
+            }
+        }
+        System.out.println("Edge matrix created");
+    }
+    public void printMatrix(int[][] m){ //print a matrix
+        System.out.println("\nPrinting matrix:");
+        for (int[] x : m) {
+            for (int y : x)
+                System.out.printf("%4d |",(y));
+            System.out.println();
+        }
     }
     /**
      * * Finds vertices adjacent to a given vertex.
@@ -37,18 +74,18 @@ public class Graph implements GraphInterface{
         int[] vert = new int[verticesNumber];
         int total = 0;
         for (int i=0; i<verticesNumber; i++)        {
-            if (matrix[v][i] != 0)            {
+            if (edgeMatrix[v][i] != 0)            {
                 vert[total] = i;
                 total++;
             }
         }
         return Arrays.copyOf(vert, total);
-}
+    }
     public String toString()    {
         String s = "";
         for (int i=0; i<verticesNumber; i++)        {
             for (int j=0; j<verticesNumber; j++)            {
-                s += matrix[i][j] + " ";
+                s += edgeMatrix[i][j] + " ";
             }
             s += "\n";
         }
