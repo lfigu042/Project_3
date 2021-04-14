@@ -19,6 +19,7 @@ public class Graph implements GraphInterface{
     public int[][]getCoordinateMatrix(){   return this.coordinateMatrix;   }
     public int[][] getEdgeMatrix()     {   setEdgeMatrix();   return this.edgeMatrix;    }
     public int getVerticesNumber()     {   return this.verticesNumber;     }
+    public int[] getShortestPath()     {   return this.shortestPath;       }
 
     public void addEdge(int i, int j, int d)    {
         edgeMatrix[i][j] = d;
