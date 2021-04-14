@@ -11,18 +11,23 @@ public class readInput {
     public void setMatrix(int[][] m) {
         this.matrix = m;
     }
+    public void setV(int v){
+        this.v = v;
+    }
 
     public int[][] getMatrix() {
         return this.matrix;
     }
-
+    public int getVertices() {
+        return this.v;
+    }
     /**
      * Reads graph from text file (entries as given in COP4534 3rd assignment) * and
      * prints it
      **/
 
     public readInput() {
-        File input = new File("input.txt");
+        File input = new File("src/com/company/input.txt");
         Scanner in = null;
         try {
             in = new Scanner(input);
@@ -50,6 +55,7 @@ public class readInput {
             }
 
             setMatrix(coordinate_matrix);
+            setV(vertices);
         }
 
         in.close();

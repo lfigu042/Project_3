@@ -12,11 +12,23 @@ public class Main {
     }
 
     public Main() {
+        System.out.println("Main ran");
+
+// TEST START
+         Graph inputGraph = new Graph();
+         int[][] coordinates = inputGraph.getCoordinateMatrix(); //coordinates
+         int vertices = inputGraph.getVerticesNumber(); //vertices
+         int[][] edges = inputGraph.getEdgeMatrix(); //edges matrix with weight
+
+         System.out.println("vertices: " + vertices);
+         inputGraph.printMatrix(coordinates);
+         inputGraph.printMatrix(edges);
+//  TEST END
 
         FrameDisplay frame = new FrameDisplay();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-        createAdjacencyMatrix();
+
         // generate 10 random permutations of values in [0,5]
         // for (int i = 0; i < 10; i++) {
         // int[] a = new int[6];
@@ -167,8 +179,6 @@ public class Main {
      * the starting point. Uses local search, so optimal solution is not obtained,
      * in general.
      *
-     * @param shortestRoute array with thea shortest path(return value)
-     *
      * @return shortest distance
      */
     // public int TSP_localSearch(int[] shortestRoute) {
@@ -204,50 +214,5 @@ public class Main {
     // } while (betterSolutionFound);
     // return bestDistance;
     // }
-
-    /**
-     * Calculates the distance b/w 2 points
-     * 
-     * @param x1 x coordinate of first point
-     * @param y1 y coordnate of first point
-     * @param x2 x coordinate of second point
-     * @param y2 y coordinate of second point
-     * @return the distance between the two points as calculated with pythagorean
-     *         theorem.
-     */
-    public static double calculatePointDistance(int x1, int y1, int x2, int y2) {
-        return Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow(y2 - y1, 2));
-    }
-
-    /**
-     * method to create an adjacency matrix
-     */
-    public static void createAdjacencyMatrix() {
-        readInput input = new readInput();
-        int[][] points = input.getMatrix();
-        double[][] adjacencyMatrix = new double[points.length][points.length];
-        for (int i = 0; i < adjacencyMatrix.length; i++) {
-            for (int j = 0; j < adjacencyMatrix[i].length; j++) {
-                if (i == j)
-                    adjacencyMatrix[i][j] = 0.0; // distance from a point to itself is always 0
-                else if (adjacencyMatrix[j][i] != 0.0) { // if the point's distance has been previously calculated
-                    adjacencyMatrix[i][j] = adjacencyMatrix[j][i]; // don't recalculate it, just use the value you
-                                                                   // already have.
-                }
-                // the points are not equal to themselves and have not been calculated
-                else {
-                    adjacencyMatrix[i][j] = calculatePointDistance(points[i][0], points[i][1], points[j][0],
-                            points[j][1]);
-                }
-            }
-        }
-        for (int i = 0; i < adjacencyMatrix.length; i++) {
-            for (int j = 0; j < adjacencyMatrix[i].length; j++) {
-                System.out.print(adjacencyMatrix[i][j] + " ");
-            }
-            System.out.println("\n");
-        }
-
-    }
 
 }
