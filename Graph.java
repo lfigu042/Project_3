@@ -13,8 +13,10 @@ public class Graph implements GraphInterface{
     private int verticesNumber = myText.getVertices(); //vertices
     private int[][] coordinateMatrix = myText.getMatrix(); //coordinates
     private int[][] edgeMatrix = new int[verticesNumber][verticesNumber]; //adjacency matrix
+    private int bestDistance = TSP_localSearch();
     private int[] shortestPath = new int[verticesNumber];
-    
+
+
 //  GETTERS
     public int[][]getCoordinateMatrix(){   return this.coordinateMatrix;   }
     public int[][] getEdgeMatrix()     {   setEdgeMatrix();   return this.edgeMatrix;    }
@@ -74,6 +76,11 @@ public class Graph implements GraphInterface{
             System.out.println();
         }
     }
+    public void printArr(int[] m){ //print array
+        System.out.println("\nPrinting array:");
+        for (int i = 0;i < m.length - 1; i++)
+            System.out.print(m[i] + " ");
+    }
     /**
      * Given an array, generates random permutation of values in [0, n-1], where n
      * is size of given array; random permutation will be stored in the array. Uses
@@ -117,18 +124,21 @@ public class Graph implements GraphInterface{
         }
         return totalWeight;
     }
-    
+    public int[] getInitialPath(){
+        int[] initialPath = new int[verticesNumber];
+        for (int i = 0; i < verticesNumber-1; i++)
+            initialPath[i] = i;
+        return initialPath;
+    }
     /**
      * Finds a shortest route that visits every vertex exactly once and returns to
      * the starting point. Uses local search, so optimal solution is not obtained,
      * in general.
      *
-     * @param shortestRoute array with thea shortest path(return value)
-     *
      * @return shortest distance
      */
-    public int TSP_localSearch(int[] shortestRoute) {
-        int bestDistance;
+    public int TSP_localSearch() {
+        int[] shortestRoute = getInitialPath();
         // generate initial solution as a random permutation
         int[] a = new int[verticesNumber];
         randomPermutation(a);

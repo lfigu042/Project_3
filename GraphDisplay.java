@@ -12,14 +12,8 @@ public class GraphDisplay extends JPanel {
     private int[][] edges = inputGraph.getEdgeMatrix(); //edges matrix with weight
     private int[] shortestPath = inputGraph.getShortestPath(); //shortest hamiltonian cycle
     
-    public int[] getInitialPath(){
-        int[] initialPath = new int[vertices];
-        for (int i = 0; i < vertices; i++)
-            initialPath[i] = i;
-        return initialPath;
-    }
-    
     public void paint(Graphics g) {
+
         System.out.println("paint() ran");
         drawVertices(coordinates, vertices, g);
 

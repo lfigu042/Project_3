@@ -19,8 +19,10 @@ public class Main {
          int[][] coordinates = inputGraph.getCoordinateMatrix(); //coordinates
          int vertices = inputGraph.getVerticesNumber(); //vertices
          int[][] edges = inputGraph.getEdgeMatrix(); //edges matrix with weight
+         int[] shortestPath = inputGraph.getShortestPath(); //shortest hamiltonian cycle
 
          System.out.println("vertices: " + vertices);
+         inputGraph.printArr(shortestPath);
          inputGraph.printMatrix(coordinates);
          inputGraph.printMatrix(edges);
 //  TEST END

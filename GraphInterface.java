@@ -8,5 +8,7 @@ public interface GraphInterface{
     public void randomPermutation(int[] a);
     public int totalDistance(int[] a);
     public int TSP_localSearch(int[] shortestRoute);
+    public int TSP_localSearch();
+    public int[] getInitialPath();
 
 }
