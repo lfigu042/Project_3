@@ -22,8 +22,8 @@ public class readInput {
         return this.v;
     }
     /**
-     * Reads graph from text file (entries as given in COP4534 3rd assignment) * and
-     * prints it
+     * Reads graph from text file (entries as given in COP4534 3rd assignment)
+     * * and prints it
      **/
 
     public readInput() {

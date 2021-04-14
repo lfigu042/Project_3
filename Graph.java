@@ -21,15 +21,59 @@ public class Graph implements GraphInterface{
     public int getVerticesNumber()     {   return this.verticesNumber;     }
     public int[] getShortestPath()     {   return this.shortestPath;       }
 
-    public void addEdge(int i, int j, int d)    {
+
+    /**
+     * method to remove an edge from edgeMatrix
+     * will remove specified edge as well as reflective edge
+     * it returns the updated matrix
+     */
+    public int[][] removeEdge(int i, int j){
+        edgeMatrix[i][j] = 0;
+        edgeMatrix[j][i] = 0;
+        return edgeMatrix; //return updated matrix
+    }
+    public void addEdge(int i, int j, int d){
         edgeMatrix[i][j] = d;
         edgeMatrix[j][i] = d;
     }
-    public void removeEdge(int i, int j)    {
-        edgeMatrix[i][j] = 0;
-        edgeMatrix[j][i] = 0;
+
+    /**
+     * Calculates the distance b/w 2 points
+     *
+     * @param x1 x coordinate of first point
+     * @param y1 y coordnate of first point
+     * @param x2 x coordinate of second point
+     * @param y2 y coordinate of second point
+     * @return the distance between the two points as calculated with pythagorean
+     *         theorem.
+     */
+    private static double calculatePointDistance(int x1, int y1, int x2, int y2) {
+        return Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow(y2 - y1, 2));
     }
-    
+    /**
+     * method to create an adjacency matrix
+     */
+    public void setEdgeMatrix() {
+        int d;
+        for (int i = 0; i < verticesNumber; i++) {
+            for (int j = 0; j < verticesNumber; j++) {
+                if (i == j) addEdge( i,  j, 0); // distance from a point to itself is always 0
+                else { // the points are not equal to themselves and have not been calculated
+                    d = (int)calculatePointDistance(coordinateMatrix[i][0], coordinateMatrix[i][1], coordinateMatrix[j][0], coordinateMatrix[j][1]);
+                    addEdge( i,  j, d);
+                }
+            }
+        }
+        System.out.println("Edge matrix created");
+    }
+    public void printMatrix(int[][] m){ //print a matrix
+        System.out.println("\nPrinting matrix:");
+        for (int[] x : m) {
+            for (int y : x)
+                System.out.printf("%4d |",(y));
+            System.out.println();
+        }
+    }
     /**
      * Given an array, generates random permutation of values in [0, n-1], where n
      * is size of given array; random permutation will be stored in the array. Uses
@@ -63,7 +107,7 @@ public class Graph implements GraphInterface{
      * @return distance
      *
      */
-    int totalDistance(int[] a) {
+    public int totalDistance(int[] a) {
         int n = a.length;
         // add weights of all edges in
         int totalWeight = 0;
@@ -100,7 +144,7 @@ public class Graph implements GraphInterface{
          */
         do {
             betterSolutionFound = false;
-            PermutationNeighborhood pn = PermutationNeighborhood(shortestRoute);
+            PermutationNeighborhood pn = new PermutationNeighborhood(shortestRoute);
 
             while (pn.hasNext()) {
                 a = pn.next();
@@ -116,44 +160,7 @@ public class Graph implements GraphInterface{
         System.arraycopy(shortestRoute, 0, shortestPath, 0, verticesNumber);
         return bestDistance;
     }
-    
-    /**
-     * Calculates the distance b/w 2 points
-     *
-     * @param x1 x coordinate of first point
-     * @param y1 y coordnate of first point
-     * @param x2 x coordinate of second point
-     * @param y2 y coordinate of second point
-     * @return the distance between the two points as calculated with pythagorean
-     *         theorem.
-     */
-    public static double calculatePointDistance(int x1, int y1, int x2, int y2) {
-        return Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow(y2 - y1, 2));
-    }
-    /**
-     * method to create an adjacency matrix
-     */
-    public void setEdgeMatrix() {
-        int d;
-        for (int i = 0; i < verticesNumber; i++) {
-            for (int j = 0; j < verticesNumber; j++) {
-                if (i == j) addEdge( i,  j, 0); // distance from a point to itself is always 0
-                else { // the points are not equal to themselves and have not been calculated
-                    d = (int)calculatePointDistance(coordinateMatrix[i][0], coordinateMatrix[i][1], coordinateMatrix[j][0], coordinateMatrix[j][1]);
-                    addEdge( i,  j, d);
-                }
-            }
-        }
-        System.out.println("Edge matrix created");
-    }
-    public void printMatrix(int[][] m){ //print a matrix
-        System.out.println("\nPrinting matrix:");
-        for (int[] x : m) {
-            for (int y : x)
-                System.out.printf("%4d |",(y));
-            System.out.println();
-        }
-    }
+
     /**
      * * Finds vertices adjacent to a given vertex.
      * @param v given vertex

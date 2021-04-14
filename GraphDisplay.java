@@ -14,12 +14,9 @@ public class GraphDisplay extends JPanel {
     
     public int[] getInitialPath(){
         int[] initialPath = new int[vertices];
-        
-        for (int i = 0; i < vertices, i++)
+        for (int i = 0; i < vertices; i++)
             initialPath[i] = i;
-        
-        return initialPath
-    
+        return initialPath;
     }
     
     public void paint(Graphics g) {
