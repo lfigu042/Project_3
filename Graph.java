@@ -12,17 +12,15 @@ public class Graph implements GraphInterface{
     readInput myText = new readInput();
     private int verticesNumber = myText.getVertices(); //vertices
     private int[][] coordinateMatrix = myText.getMatrix(); //coordinates
-    private int[][] edgeMatrix = new int[verticesNumber][verticesNumber]; //adjacency matrix
-    private int bestDistance = TSP_localSearch();
-    private int[] shortestPath = new int[verticesNumber];
-
-
-//  GETTERS
+    private int[][] edgeMatrix = setEdgeMatrix();  //adjacency matrix
+    private int[] shortestPath = TSP_localSearch();
+    private int shortestDistance = totalDistance(shortestPath);
+    //  GETTERS
     public int[][]getCoordinateMatrix(){   return this.coordinateMatrix;   }
-    public int[][] getEdgeMatrix()     {   setEdgeMatrix();   return this.edgeMatrix;    }
+    public int[][] getEdgeMatrix()     {   return this.edgeMatrix;    }
     public int getVerticesNumber()     {   return this.verticesNumber;     }
     public int[] getShortestPath()     {   return this.shortestPath;       }
-
+    public int getShortestDistance()   {   return this.shortestDistance;       }
 
     /**
      * method to remove an edge from edgeMatrix
@@ -49,27 +47,32 @@ public class Graph implements GraphInterface{
      * @return the distance between the two points as calculated with pythagorean
      *         theorem.
      */
-    private static double calculatePointDistance(int x1, int y1, int x2, int y2) {
-        return Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow(y2 - y1, 2));
+    private static int calculatePointDistance(int x1, int y1, int x2, int y2) {
+        return (int)Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow(y2 - y1, 2));
     }
     /**
      * method to create an adjacency matrix
      */
-    public void setEdgeMatrix() {
+    public int[][] setEdgeMatrix() {
         int d;
+        int[][] m = new int[verticesNumber][verticesNumber];
         for (int i = 0; i < verticesNumber; i++) {
-            for (int j = 0; j < verticesNumber; j++) {
-                if (i == j) addEdge( i,  j, 0); // distance from a point to itself is always 0
+            for (int j = i+1; j < verticesNumber ; j++) { //only traversing half of symmetric matrix
+                if (i == j){
+                    m[i][j] = 0;
+                    m[j][i] = 0;
+                } // distance from a point to itself is always 0
                 else { // the points are not equal to themselves and have not been calculated
-                    d = (int)calculatePointDistance(coordinateMatrix[i][0], coordinateMatrix[i][1], coordinateMatrix[j][0], coordinateMatrix[j][1]);
-                    addEdge( i,  j, d);
+                    d = calculatePointDistance(coordinateMatrix[i][0], coordinateMatrix[i][1], coordinateMatrix[j][0], coordinateMatrix[j][1]);
+                    m[i][j] = d;
+                    m[j][i] = d;
                 }
             }
         }
         System.out.println("Edge matrix created");
+        return m;
     }
     public void printMatrix(int[][] m){ //print a matrix
-        System.out.println("\nPrinting matrix:");
         for (int[] x : m) {
             for (int y : x)
                 System.out.printf("%4d |",(y));
@@ -77,9 +80,9 @@ public class Graph implements GraphInterface{
         }
     }
     public void printArr(int[] m){ //print array
-        System.out.println("\nPrinting array:");
-        for (int i = 0;i < m.length - 1; i++)
+        for (int i = 0; i < m.length ; i++)
             System.out.print(m[i] + " ");
+        System.out.println();
     }
     /**
      * Given an array, generates random permutation of values in [0, n-1], where n
@@ -89,11 +92,9 @@ public class Graph implements GraphInterface{
      * @param a output array
      */
     public void randomPermutation(int[] a) {
-        for (int i = 0; i < a.length; i++) {
-            a[i] = i;
-        }
+//        System.out.print("\n'a' at beginning' " ); printArr(a);
         Random rnd = new Random();
-        for (int i = a.length - 1; i > 0; i--) {
+        for (int i = verticesNumber - 1; i >= 0; i--) {
             // generates a random index in [0,i]
             int randomLocation = rnd.nextInt(i + 1);
 
@@ -104,6 +105,10 @@ public class Graph implements GraphInterface{
                 a[randomLocation] = temp;
             }
         }
+        a[a.length-1] = a[0]; //start and end in same point
+//        System.out.print("\n'a' at end' " ); printArr(a);
+
+
     }
     
     /**
@@ -115,18 +120,27 @@ public class Graph implements GraphInterface{
      *
      */
     public int totalDistance(int[] a) {
+
         int n = a.length;
-        // add weights of all edges in
+        int x1,y1,x2,y2;
+        // add weights of all edges in 'a'
         int totalWeight = 0;
-        for (int i = 0; i < n; i++) {
-            int weight = edgeMatrix[a[i]][a[(i + 1) % n]];
-            totalWeight += weight;
+
+        for (int i = 0; i < n-1; i++) {
+//            int weight = edgeMatrix[a[i]][a[(i + 1)]];
+//            x1 = coordinateMatrix[a[i]][0];
+//            y1 = coordinateMatrix[a[i]][1];
+//            x2 = coordinateMatrix[a[i+1]][0];
+//            y2 = coordinateMatrix[a[i+1]][1];
+            totalWeight += edgeMatrix[a[i]][a[(i + 1)]];
+//            totalWeight += calculatePointDistance(x1,y1,x2,y2);
         }
+        System.out.println("total weight inside totalDistance()->\n" + totalWeight);
         return totalWeight;
     }
-    public int[] getInitialPath(){
-        int[] initialPath = new int[verticesNumber];
-        for (int i = 0; i < verticesNumber-1; i++)
+    public int[] fillArr(int len){
+        int[] initialPath = new int[len];
+        for (int i = 0; i < len; i++)
             initialPath[i] = i;
         return initialPath;
     }
@@ -137,17 +151,21 @@ public class Graph implements GraphInterface{
      *
      * @return shortest distance
      */
-    public int TSP_localSearch() {
-        int[] shortestRoute = getInitialPath();
-        // generate initial solution as a random permutation
-        int[] a = new int[verticesNumber];
-        randomPermutation(a);
-
-        // shortestRoute = initial solution
-        System.arraycopy(a, 0, shortestRoute, 0, verticesNumber);
-        bestDistance = totalDistance(shortestRoute);
-
+    public int[] TSP_localSearch() {
+        System.out.println("TSP_localSearch begin");
+        System.out.println("vertices: "+ verticesNumber);
+        System.out.print("\nedge matrix ->>> \n" ); printMatrix(edgeMatrix);
+        int d; //hold distance weight
         boolean betterSolutionFound;
+        int[] shortestRoute = fillArr(verticesNumber+1);
+        int[] a = fillArr(verticesNumber+1);
+
+        randomPermutation(a); // generate initial solution as a random permutation
+        System.arraycopy(a, 0, shortestRoute, 0, verticesNumber+1);
+        d = totalDistance(shortestRoute);
+        System.out.print("\nshortest route random start: " ); printArr(shortestRoute);
+        System.out.println("\nroute distance random start: " +d );
+
         /*
          * Loop will continue as long as there is a neighbor that improves best distance
          * obtained so far
@@ -159,16 +177,21 @@ public class Graph implements GraphInterface{
             while (pn.hasNext()) {
                 a = pn.next();
                 int currentDistance = totalDistance(a);
-                if (currentDistance < bestDistance) {
+                if (currentDistance < d) {
                     // shortestRoute = current Solution
                     System.arraycopy(a, 0, shortestRoute, 0, verticesNumber);
-                    bestDistance = currentDistance;
+                    d = currentDistance;
                     betterSolutionFound = true;
+                    System.out.println("better solution found");
+                    System.out.println("new shortest route -> "); printArr(shortestRoute);
                 }
             }
         } while (betterSolutionFound);
-        System.arraycopy(shortestRoute, 0, shortestPath, 0, verticesNumber);
-        return bestDistance;
+
+        System.out.print("\n** shortest route end: " ); printArr(shortestRoute);
+        System.out.println("** route distance end: \n" + d );
+
+        return shortestRoute;
     }
 
     /**
