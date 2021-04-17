@@ -34,7 +34,7 @@ public class PermutationNeighborhood{
      */
     public boolean hasNext() {
         return loc1 != SIZE - 2;
-    } //not counting the last element since its thesame as last
+    } //not counting the last element since its the same as last
 
     /**
      * Returns next permutation neighbor.

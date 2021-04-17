@@ -15,16 +15,16 @@ public class Main {
         System.out.println("Main ran");
 
 // TEST START
-         Graph inputGraph = new Graph();
-         int[][] coordinates = inputGraph.getCoordinateMatrix(); //coordinates
-         int vertices = inputGraph.getVerticesNumber(); //vertices
-         int[][] edges = inputGraph.getEdgeMatrix(); //edges matrix with weight
-         int[] shortestPath = inputGraph.getShortestPath(); //shortest hamiltonian cycle
-
-         System.out.println("vertices: " + vertices);
-         inputGraph.printArr(shortestPath);
-         inputGraph.printMatrix(coordinates);
-         inputGraph.printMatrix(edges);
+//         Graph inputGraph = new Graph();
+//         int[][] coordinates = inputGraph.getCoordinateMatrix(); //coordinates
+//         int vertices = inputGraph.getVerticesNumber(); //vertices
+//         int[][] edges = inputGraph.getEdgeMatrix(); //edges matrix with weight
+//         int[] shortestPath = inputGraph.getShortestPath(); //shortest hamiltonian cycle
+//
+//         System.out.println("vertices: " + vertices);
+//         inputGraph.printArr(shortestPath);
+//         inputGraph.printMatrix(coordinates);
+//         inputGraph.printMatrix(edges);
 //  TEST END
 
         FrameDisplay frame = new FrameDisplay();

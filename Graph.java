@@ -162,9 +162,9 @@ public class Graph implements GraphInterface{
         randomPermutation(a); // generate initial solution as a random permutation
         System.arraycopy(a, 0, shortestRoute, 0, verticesNumber+1);
         d = totalDistance(shortestRoute);
-        System.out.print("\nrandom route: " ); printArr(shortestRoute);
-        System.out.println("\nrandom route distance: " + d );
-
+        System.out.print("\n\tstarting random route: " ); printArr(shortestRoute);
+        System.out.println("\n\tstarting route distance: " + d );
+        System.out.println("--------------------------------------------------");
         /*
          * Loop will continue as long as there is a neighbor that improves best distance
          * obtained so far
@@ -185,7 +185,7 @@ public class Graph implements GraphInterface{
                     System.arraycopy(a, 0, shortestRoute, 0, verticesNumber);
                     d = currentDistance;
                     betterSolutionFound = true;
-                    System.out.println("better solution found");
+                    System.out.println("*** better solution found ***");
                     System.out.print("new shortest route -> "); printArr(shortestRoute);
                     System.out.println();
                 }
