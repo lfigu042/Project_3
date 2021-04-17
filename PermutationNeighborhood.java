@@ -24,8 +24,8 @@ public class PermutationNeighborhood{
         p = new int[SIZE];
         System.arraycopy(a, 0, p, 0, SIZE);
 
-        loc1 = 0;
-        loc2 = 1;
+        loc1 = 1;
+        loc2 = 2;
     }
 
     /**
@@ -33,8 +33,8 @@ public class PermutationNeighborhood{
      * otherwise.
      */
     public boolean hasNext() {
-        return loc1 != SIZE - 1;
-    }
+        return loc1 != SIZE - 2;
+    } //not counting the last element since its thesame as last
 
     /**
      * Returns next permutation neighbor.
@@ -52,7 +52,7 @@ public class PermutationNeighborhood{
             a[loc2] = p[loc1];
 
             //advance loc1 and loc2
-            if (loc2 == SIZE - 1){
+            if (loc2 == SIZE - 2){ //dont switch last element since it has to stay the same as last
                 loc1++;
                 loc2 = loc1 + 1;
             }

@@ -81,8 +81,7 @@ public class Graph implements GraphInterface{
     }
     public void printArr(int[] m){ //print array
         for (int i = 0; i < m.length ; i++)
-            System.out.print(m[i] + " ");
-        System.out.println();
+            System.out.print(m[i] + "-");
     }
     /**
      * Given an array, generates random permutation of values in [0, n-1], where n
@@ -135,7 +134,7 @@ public class Graph implements GraphInterface{
             totalWeight += edgeMatrix[a[i]][a[(i + 1)]];
 //            totalWeight += calculatePointDistance(x1,y1,x2,y2);
         }
-        System.out.println("total weight inside totalDistance()->\n" + totalWeight);
+//        System.out.println("total weight inside totalDistance()->\n" + totalWeight);
         return totalWeight;
     }
     public int[] fillArr(int len){
@@ -163,8 +162,8 @@ public class Graph implements GraphInterface{
         randomPermutation(a); // generate initial solution as a random permutation
         System.arraycopy(a, 0, shortestRoute, 0, verticesNumber+1);
         d = totalDistance(shortestRoute);
-        System.out.print("\nshortest route random start: " ); printArr(shortestRoute);
-        System.out.println("\nroute distance random start: " +d );
+        System.out.print("\nrandom route: " ); printArr(shortestRoute);
+        System.out.println("\nrandom route distance: " + d );
 
         /*
          * Loop will continue as long as there is a neighbor that improves best distance
@@ -176,20 +175,25 @@ public class Graph implements GraphInterface{
 
             while (pn.hasNext()) {
                 a = pn.next();
+
                 int currentDistance = totalDistance(a);
+                System.out.print("testing route -> "); printArr(a);
+                System.out.println("\ndistance -> " + currentDistance);
+
                 if (currentDistance < d) {
                     // shortestRoute = current Solution
                     System.arraycopy(a, 0, shortestRoute, 0, verticesNumber);
                     d = currentDistance;
                     betterSolutionFound = true;
                     System.out.println("better solution found");
-                    System.out.println("new shortest route -> "); printArr(shortestRoute);
+                    System.out.print("new shortest route -> "); printArr(shortestRoute);
+                    System.out.println();
                 }
             }
         } while (betterSolutionFound);
 
         System.out.print("\n** shortest route end: " ); printArr(shortestRoute);
-        System.out.println("** route distance end: \n" + d );
+        System.out.println("\n** route distance end: " + d );
 
         return shortestRoute;
     }
