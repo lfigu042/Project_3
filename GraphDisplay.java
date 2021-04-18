@@ -5,18 +5,12 @@ import java.awt.*;
 
 public class GraphDisplay extends JPanel {
 
-    int screen_W, screen_H;
+    int screen_W, screen_H,offSet;
     int width = 50; //width of nodes
     int height = 50; //height of nodes
     int labelX = 20;
     int labelY = 30;
     int fontSize = 20;
-
-    public GraphDisplay(int W, int H){ //CONSTRUCTOR, get window measurements from FrameDisplay
-        screen_W = W;
-        screen_H = H;
-        System.out.println("screen dimensions: "+ screen_W+ " x "+ screen_H);
-    }
 
     Graph inputGraph = new Graph();
     private final int[][] coordinates = inputGraph.getCoordinateMatrix(); //coordinates
@@ -24,6 +18,15 @@ public class GraphDisplay extends JPanel {
     private final int[][] edges = inputGraph.getEdgeMatrix(); //edges matrix with weight
     private final int[] path = inputGraph.getShortestPath(); //shortest hamiltonian cycle
     private final int distance = inputGraph.getShortestDistance();
+
+    public GraphDisplay(int W, int H){ //CONSTRUCTOR, get window measurements from FrameDisplay
+        screen_W = W;
+        screen_H = H;
+        offSet = screen_W/2;
+        System.out.println("screen dimensions: "+ screen_W+ " x "+ screen_H);
+    }
+
+
 
     public void paint(Graphics g) {
         System.out.println("paint() ran");
@@ -76,7 +79,8 @@ public class GraphDisplay extends JPanel {
                 System.out.print(i + " , " + j +" -> ");
                 x2 = coordinates[j][0];
                 y2 = coordinates[j][1];
-                g.drawLine(x1+labelX , y1, x2+labelX , y2 );
+                g.drawLine(x1+labelX , y1, x2+labelX , y2 ); //line for local search graph (left)
+                g.drawLine(x1+offSet+ labelX , y1, x2+ offSet + labelX , y2 ); //line for exhaustive search graph (right)
             }
             System.out.println();
         }
@@ -89,11 +93,18 @@ public class GraphDisplay extends JPanel {
         for (int i = 0; i < numVertices; i++){
             x = coordinates[i][0];
             y = coordinates[i][1];
+
             g.setColor(Color.ORANGE);
-            g.fillOval(x, y - labelY, width, height);
+            g.fillOval(x, y - labelY, width, height); //ovals for local search graph (left)
+            g.fillOval(x + offSet, y - labelY, width, height); //line for exhaustive search graph (right)
+
             g.setColor(Color.BLACK);
-            g.drawOval(x, y - labelY, width, height);
-            g.drawString(String.valueOf(i), x+labelX, y);
+
+            g.drawOval(x, y - labelY, width, height); //ovals for local search graph (left)
+            g.drawString(String.valueOf(i), x+labelX, y); //labels for local search graph (left)
+
+            g.drawOval(x + offSet, y - labelY, width, height); //ovals for exhaustive search graph (right)
+            g.drawString(String.valueOf(i), x+labelX + offSet, y); //label for exhaustive search graph (right)
         }
     }
 }
