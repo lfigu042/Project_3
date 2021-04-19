@@ -1,5 +1,14 @@
 package com.company;
-
+/**
+ * Made by:
+ *  Laura Figueroa 4918449
+ *  Martin Alvarez 5856597
+ *  Victoria Lariot 6124058
+ *
+ * Professor: Antonio Hernandez
+ * Class: COP 4534
+ * Section: UO1
+ */
 import javax.swing.*;
 import java.awt.*;
 
@@ -18,14 +27,15 @@ public class GraphDisplay extends JPanel {
     private final int[][] coordinates = inputGraph.getCoordinateMatrix(); //coordinates
     private final int numVertices = inputGraph.getVerticesNumber(); //vertices
     private final int[][] edges = inputGraph.getEdgeMatrix(); //edges matrix with weight
-    private final int[] localSearchPath = inputGraph.getShortestPath(); //shortest hamiltonian cycle
-    private final int localSearchDistance = inputGraph.getShortestDistance();
+    private final int[] localSearchPath = inputGraph.getShortestPathLocal(); //shortest hamiltonian cycle
+    private final int localSearchDistance = inputGraph.getShortestDistanceLocal();
+    private final int[] exhaustiveSearchPath = inputGraph.getShortestPathExhaustive(); //shortest hamiltonian cycle
+    private final int exhaustiveSearchDistance = inputGraph.getShortestDistanceExhaustive();
 
     public GraphDisplay(int W, int H){ //CONSTRUCTOR, get window measurements from FrameDisplay
         screen_W = W;
         screen_H = H;
         offSet = screen_W/2;
-        System.out.println("screen dimensions: "+ screen_W+ " x "+ screen_H);
     }
 
     public void paint(Graphics g) {
@@ -34,25 +44,22 @@ public class GraphDisplay extends JPanel {
         drawPathInfo(g);
         drawVertices(g);
     }
-    public void drawShortestPath(int s, int e, Graphics g){
-        System.out.println("drawShortestPath() ran");
+    public void drawShortestPath(int s, int e, Graphics g, int offset){
         int x1 = coordinates[s][0];
         int y1 = coordinates[s][1];
         int x2 = coordinates[e][0];
         int y2 = coordinates[e][1];
 
         g.setColor(Color.GREEN);
-        g.drawLine(x1+labelX , y1, x2+labelX , y2 );
+
+        g.drawLine(x1+labelX +offset, y1, x2+labelX +offset, y2 );
     }
-    public void drawPathWeight(int s, int e, Graphics g){
-        System.out.println("drawPathWeight() ran\n");
-        System.out.printf("start %d, end %d",s,e);
+    public void drawPathWeight(int s, int e, Graphics g ,int offset){
         int x,y;
         weight = String.valueOf(edges[s][e]); //weight value of an edge
 
-
 //        //draw weight in the middle point of each edge
-        x = labelX + ((coordinates[s][0] + coordinates[e][0]) / 2);
+        x = offset+ labelX + ((coordinates[s][0] + coordinates[e][0]) / 2);
         y = 10 + ((coordinates[s][1] + coordinates[e][1]) / 2);
 
         g.setColor(Color.DARK_GRAY);
@@ -60,21 +67,31 @@ public class GraphDisplay extends JPanel {
         g.drawString(weight, x, y);
     }
     public void drawPathInfo( Graphics g){
-        int l = localSearchPath.length;
+        int l1 = localSearchPath.length;
+        int l2 = exhaustiveSearchPath.length;
         int indent = 25;
         int lines = screen_H-100;
         String outputLocalSearch = "";
+        String outputExhaustiveSearch = "";
 
-        System.out.println("drawPathInfo() ran");
         g.setFont(new Font("TimesRoman", Font.PLAIN, labelsFontSize -5));
 
-        for (int i = 0; i < l ; i++) {
-            if(i == l - 1) {
+        for (int i = 0; i < l1 ; i++) {
+            if(i == l1 - 1) {
                  outputLocalSearch += localSearchPath[i];
             }else {
-                drawShortestPath(localSearchPath[i], localSearchPath[i+1],g);
-                drawPathWeight(localSearchPath[i], localSearchPath[i+1],g);
+                drawShortestPath(localSearchPath[i], localSearchPath[i+1],g,0);
+                drawPathWeight(localSearchPath[i], localSearchPath[i+1],g, 0);
                 outputLocalSearch += localSearchPath[i] + " -> ";
+            }
+        }
+        for (int i = 0; i < l2 ; i++) {
+            if(i == l2 - 1) {
+                outputExhaustiveSearch += exhaustiveSearchPath[i];
+            }else {
+                drawShortestPath(exhaustiveSearchPath[i], exhaustiveSearchPath[i+1],g, offSet);
+                drawPathWeight(exhaustiveSearchPath[i], exhaustiveSearchPath[i+1],g, offSet);
+                outputExhaustiveSearch += exhaustiveSearchPath[i] + " -> ";
             }
         }
         g.setColor(Color.black);
@@ -82,13 +99,14 @@ public class GraphDisplay extends JPanel {
         g.drawString("Shortest path with local search: ", indent, lines);
         g.drawString("Shortest path with exhaustive search: ", indent + offSet, lines);
 
-        g.drawString(outputLocalSearch, indent, lines += 20);
-        g.drawString("Total distance: " + localSearchDistance, indent, lines + 20); //local search
-        g.drawString("Total distance: TBD" , indent + offSet, lines + 20); //exhaustive search
+        g.drawString(outputLocalSearch, indent, lines + 20);
+        g.drawString("Total distance: " + localSearchDistance, indent, lines + 40); //local search
+
+        g.drawString(outputExhaustiveSearch, indent+offSet, lines + 20);
+        g.drawString("Total distance: " + exhaustiveSearchDistance, indent + offSet, lines + 40); //exhaustive search
 
     }
     public void drawEdges(Graphics g){
-        System.out.println("drawEdges() ran");
         int x1,x2,y1,y2;
         g.setColor(Color.LIGHT_GRAY);
 
@@ -106,7 +124,6 @@ public class GraphDisplay extends JPanel {
         }
     }
     public void drawVertices( Graphics g){
-        System.out.println("drawVertices() ran");
         int x,y;
         g.setFont(new Font(Font.SANS_SERIF, Font.BOLD, labelsFontSize));
 

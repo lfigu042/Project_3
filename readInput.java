@@ -1,4 +1,14 @@
 package com.company;
+/**
+ * Made by:
+ *  Laura Figueroa 4918449
+ *  Martin Alvarez 5856597
+ *  Victoria Lariot 6124058
+ *
+ * Professor: Antonio Hernandez
+ * Class: COP 4534
+ * Section: UO1
+ */
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -40,25 +50,18 @@ public class readInput {
 
         while (in.hasNextLine()) {
             vertices = in.nextInt();
-            // System.out.println("Number of vertices: " + vertices);
-
             coordinate_matrix = new int[vertices][2]; // creating 2d array for file matrix
 
-            // System.out.println("Matrix: ");
             for (int i = 0; i < vertices; i++) {
                 for (int j = 0; j < 2; j++) {
                     mat_i_j = in.nextInt();
-                    // System.out.print(mat_i_j + " ");
                     coordinate_matrix[i][j] = mat_i_j;
                 }
                 System.out.println();
             }
-
             setMatrix(coordinate_matrix);
             setV(vertices);
         }
-
         in.close();
     }
-
 }

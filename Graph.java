@@ -1,10 +1,17 @@
 package com.company;
-
+/**
+ * Made by:
+ *  Laura Figueroa 4918449
+ *  Martin Alvarez 5856597
+ *  Victoria Lariot 6124058
+ *
+ * Professor: Antonio Hernandez
+ * Class: COP 4534
+ * Section: UO1
+ */
 import java.util.*;
 /**
  * * Implements a Graph. Uses an adjacency matrix to represent the graph.
- *
- *  @author Prof. Antonio Hernandez
  *  */
 
 public class Graph implements GraphInterface{
@@ -13,15 +20,20 @@ public class Graph implements GraphInterface{
     private int verticesNumber = myText.getVertices(); //vertices
     private int[][] coordinateMatrix = myText.getMatrix(); //coordinates
     private int[][] edgeMatrix = setEdgeMatrix();  //adjacency matrix
-    private int[] shortestPath = TSP_localSearch();
-    private int shortestDistance = totalDistance(shortestPath);
-    //  GETTERS
-    public int[][]getCoordinateMatrix(){   return this.coordinateMatrix;   }
-    public int[][] getEdgeMatrix()     {   return this.edgeMatrix;    }
-    public int getVerticesNumber()     {   return this.verticesNumber;     }
-    public int[] getShortestPath()     {   return this.shortestPath;       }
-    public int getShortestDistance()   {   return this.shortestDistance;       }
+    private int[] shortestPathLocal = TSP_localSearch();
+    private int shortestDistanceLocal = totalDistance(shortestPathLocal);
 
+    private int[] shortestPathExhaustive = TSP_exhaustiveSearch();
+    private int shortestDistanceExhaustive = totalDistance(shortestPathExhaustive);
+
+    //  GETTERS
+    public int[][]getCoordinateMatrix()     {   return this.coordinateMatrix;        }
+    public int[][] getEdgeMatrix()          {   return this.edgeMatrix;              }
+    public int getVerticesNumber()          {   return this.verticesNumber;          }
+    public int[] getShortestPathLocal()     {   return this.shortestPathLocal;       }
+    public int[] getShortestPathExhaustive(){   return this.shortestPathExhaustive;         }
+    public int getShortestDistanceLocal()   {   return this.shortestDistanceLocal;          }
+    public int getShortestDistanceExhaustive()   {   return this.shortestDistanceExhaustive;}
     /**
      * method to remove an edge from edgeMatrix
      * will remove specified edge as well as reflective edge
@@ -69,7 +81,6 @@ public class Graph implements GraphInterface{
                 }
             }
         }
-        System.out.println("Edge matrix created");
         return m;
     }
     public void printMatrix(int[][] m){ //print a matrix
@@ -91,7 +102,6 @@ public class Graph implements GraphInterface{
      * @param a output array
      */
     public void randomPermutation(int[] a) {
-//        System.out.print("\n'a' at beginning' " ); printArr(a);
         Random rnd = new Random();
         for (int i = verticesNumber - 1; i >= 0; i--) {
             // generates a random index in [0,i]
@@ -105,36 +115,21 @@ public class Graph implements GraphInterface{
             }
         }
         a[a.length-1] = a[0]; //start and end in same point
-//        System.out.print("\n'a' at end' " ); printArr(a);
-
-
     }
-    
+
     /**
      * Calculates distance of given route.
-     *
      * @param a route
-     *
      * @return distance
-     *
      */
     public int totalDistance(int[] a) {
-
         int n = a.length;
-        int x1,y1,x2,y2;
         // add weights of all edges in 'a'
         int totalWeight = 0;
 
         for (int i = 0; i < n-1; i++) {
-//            int weight = edgeMatrix[a[i]][a[(i + 1)]];
-//            x1 = coordinateMatrix[a[i]][0];
-//            y1 = coordinateMatrix[a[i]][1];
-//            x2 = coordinateMatrix[a[i+1]][0];
-//            y2 = coordinateMatrix[a[i+1]][1];
             totalWeight += edgeMatrix[a[i]][a[(i + 1)]];
-//            totalWeight += calculatePointDistance(x1,y1,x2,y2);
         }
-//        System.out.println("total weight inside totalDistance()->\n" + totalWeight);
         return totalWeight;
     }
     public int[] fillArr(int len){
@@ -151,9 +146,6 @@ public class Graph implements GraphInterface{
      * @return shortest distance
      */
     public int[] TSP_localSearch() {
-        System.out.println("TSP_localSearch begin");
-        System.out.println("vertices: "+ verticesNumber);
-        System.out.print("\nedge matrix ->>> \n" ); printMatrix(edgeMatrix);
         int d; //hold distance weight
         boolean betterSolutionFound;
         int[] shortestRoute = fillArr(verticesNumber+1);
@@ -162,9 +154,6 @@ public class Graph implements GraphInterface{
         randomPermutation(a); // generate initial solution as a random permutation
         System.arraycopy(a, 0, shortestRoute, 0, verticesNumber+1);
         d = totalDistance(shortestRoute);
-        System.out.print("\n\tstarting random route: " ); printArr(shortestRoute);
-        System.out.println("\n\tstarting route distance: " + d );
-        System.out.println("--------------------------------------------------");
         /*
          * Loop will continue as long as there is a neighbor that improves best distance
          * obtained so far
@@ -177,25 +166,74 @@ public class Graph implements GraphInterface{
                 a = pn.next();
 
                 int currentDistance = totalDistance(a);
-                System.out.print("testing route -> "); printArr(a);
-                System.out.println("\ndistance -> " + currentDistance);
 
                 if (currentDistance < d) {
                     // shortestRoute = current Solution
                     System.arraycopy(a, 0, shortestRoute, 0, verticesNumber);
                     d = currentDistance;
                     betterSolutionFound = true;
-                    System.out.println("*** better solution found ***");
-                    System.out.print("new shortest route -> "); printArr(shortestRoute);
                     System.out.println();
                 }
             }
         } while (betterSolutionFound);
-
-        System.out.print("\n** shortest route end: " ); printArr(shortestRoute);
-        System.out.println("\n** route distance end: " + d );
-
         return shortestRoute;
+    }
+
+    /**
+     * Finds a shortest route that visits every vertex exactly once and returns to
+     * the starting point Uses exhaustive search.
+     *
+     * @return shortest distance
+     *
+     */
+     public int[] TSP_exhaustiveSearch() {
+         int[] shortestRoute = new int[verticesNumber];
+         // initialize shortestRoute
+         for (int i = 0; i < verticesNumber; i++) {
+            shortestRoute[i] = i;
+         }
+         int[] a = new int[verticesNumber];
+         TSP_exhaustiveSearch(shortestRoute, a, 0);
+
+         int[] b = new int[verticesNumber+1]; //make shortest route end in same node
+         System.arraycopy(shortestRoute, 0, b, 0, verticesNumber);
+         b[b.length-1] = shortestRoute[0];
+         return b;
+     }
+    /**
+     * Recursive algorithm.
+     *
+     * @param a array partially filled with permutation
+     * @param k index of current element in permutation
+     */
+     private void TSP_exhaustiveSearch(int[] shortestRoute, int[] a, int k) {
+         if (k == a.length) {
+             if (totalDistance(a) < totalDistance(shortestRoute)) {
+                System.arraycopy(a, 0, shortestRoute, 0, verticesNumber+1);
+             }
+         } else {
+             ArrayList<Integer> Sk = constructCandidateSet(a, k);
+             for (int s : Sk) {
+                 a[k] = s;
+                 TSP_exhaustiveSearch(shortestRoute, a, k + 1);
+             }
+         }
+     }
+    /**
+     * Construct candidate set (set will contain elements not used in locations
+     * [0,k-1] of array a)
+     */
+    private ArrayList<Integer> constructCandidateSet(int[] a, int k) {
+        ArrayList<Integer> candidates = new ArrayList<>();
+        boolean[] b = new boolean[a.length];
+        for (int i = 0; i < k; i++) {
+            b[a[i]] = true;
+        }
+        for (int i = 0; i < a.length-1; i++) {
+            if (!b[i])
+                candidates.add(i);
+        }
+        return candidates;
     }
 
     /**

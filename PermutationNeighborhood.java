@@ -1,10 +1,19 @@
 package com.company;
 /**
+ * Made by:
+ *  Laura Figueroa 4918449
+ *  Martin Alvarez 5856597
+ *  Victoria Lariot 6124058
+ *
+ * Professor: Antonio Hernandez
+ * Class: COP 4534
+ * Section: UO1
+ */
+
+/**
  * Iterator class, allows traversal of the set of neighbors
  * of given permutation. There will be n(n-1)/2 neighbors,
  * obtained by swapping all pairs of elements in the permutation.
- *
- * @author Antonio Hernandez
  */
 public class PermutationNeighborhood{
 

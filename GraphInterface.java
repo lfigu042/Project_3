@@ -1,13 +1,18 @@
 package com.company;
-
+/**
+ * Made by:
+ *  Laura Figueroa 4918449
+ *  Martin Alvarez 5856597
+ *  Victoria Lariot 6124058
+ *
+ * Professor: Antonio Hernandez
+ * Class: COP 4534
+ * Section: UO1
+ */
 public interface GraphInterface{
-    public void addEdge(int i, int j, int d);
-    public int[][] removeEdge(int i, int j);
-    public int[] findAdjacencyVertices(int v);
-    public String toString();
-    public void randomPermutation(int[] a);
-    public int totalDistance(int[] a);
-    public int[] TSP_localSearch();
-//    public int[] getInitialPath();
+    String toString();
+    void randomPermutation(int[] a);
+    int totalDistance(int[] a);
+    int[] TSP_localSearch();
 
 }
